@@ -38,8 +38,9 @@ void fragment() {
     }
 
     if (use_pixelate) {
-        float pixels = mix(512.0, 32.0, pixel_size);
-        uv = floor(uv * pixels) / pixels;
+        float scale = mix(1.0, 8.0, pixel_size);
+        vec2 pixelated_uv = floor(uv / (SCREEN_PIXEL_SIZE * scale)) * (SCREEN_PIXEL_SIZE * scale);
+        uv = pixelated_uv;
     }
 
     // Luego leemos el color con el UV final

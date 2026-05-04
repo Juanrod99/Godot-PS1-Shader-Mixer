@@ -170,7 +170,7 @@ func _export_shader():
 		values[effects[i]["float"]] = sliders[i].value
 	
 	var code = "shader_type canvas_item;\n\n"
-	code += "uniform sampler2D SCREEN_TEXTURE: hint_screen_texture, filter_linear_mipmap;\n\n"
+	code += "uniform sampler2D SCREEN_TEXTURE: hint_screen_texture, filter_nearest;\n\n"
 	
 	for i in range(effects.size()):
 		var b = effects[i]["bool"]
@@ -193,8 +193,9 @@ void fragment() {
     }
 
     if (use_pixelate) {
-        float pixels = mix(512.0, 32.0, pixel_size);
-        uv = floor(uv * pixels) / pixels;
+       float scale = mix(2.0, 32.0, pixel_size);
+       vec2 pixelated_uv = floor(uv / (SCREEN_PIXEL_SIZE * scale)) * (SCREEN_PIXEL_SIZE * scale);
+       uv = pixelated_uv;
     }
 
     vec4 col = texture(SCREEN_TEXTURE, uv);
@@ -216,7 +217,7 @@ void fragment() {
     }
 
     if (use_scanlines) {
-        float scan = sin(uv.y / SCREEN_PIXEL_SIZE.y) * 0.5 + 0.5;
+        float scan = sin(uv.y * 240.0 * 3.14159265) * 0.5 + 0.5;
         col.rgb -= scan * scanlines_opacity * 0.2;
     }
 
