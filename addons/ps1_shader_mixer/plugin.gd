@@ -11,3 +11,9 @@ func _enter_tree():
 func _exit_tree():
 	remove_control_from_docks(panel)
 	panel.queue_free()
+
+func _enable_plugin():
+	add_autoload_singleton("PS1CaptureHelper", "res://addons/ps1_shader_mixer/capture_helper.gd")
+
+func _disable_plugin():
+	remove_autoload_singleton("PS1CaptureHelper")
